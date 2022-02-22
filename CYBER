@@ -1,0 +1,36 @@
+var POST_URL = "https://discord.com/api/webhooks/945516860407943208/hnKi_YGQ3ZYPVTC6OPTEa5--tFZ7je1HL-bGo_fuI7R9cSjAnwdsZRMj7NZlpfi1yP-h";
+
+  function onSubmit(e) {
+  var discordPayload = {
+    content: "New Form Submitted",
+    embeds: [
+      {
+        type: "rich",
+        title: "Form Entry",
+        color: 307506,
+        fields: []
+      }
+    ]
+  };
+
+  e.response.getItemResponses().forEach(function (i) {
+    var v = i.getResponse() || "None";
+
+    if (!Array.isArray(v))
+      discordPayload.embeds[0].fields.push({
+        name: i.getItem().getTitle(),
+        value: v
+      });
+    else
+      discordPayload.embeds[0].fields.push({
+        name: i.getItem().getTitle(),
+        value: v.toString()
+      });
+  });
+
+  UrlFetchApp.fetch(POST_URL, {
+    method: "post",
+    payload: JSON.stringify(discordPayload),
+    contentType: "application/json"
+  });
+}
